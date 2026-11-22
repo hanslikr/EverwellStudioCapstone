@@ -1,3 +1,9 @@
+<!--sources/guides utilized
+https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Sending_forms_through_JavaScript?
+https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/submit_event? (success message!)
+Want to use javascript to handle the submission of the registration form which collects the customer datas and sends to Java BE w/o refreshing page. Backend will process the info and transfer it to MySQL database. a success response should populate if it went through correctly-->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,21 +13,108 @@
 </head>
 <body>
 
+    <!-- front page heading and slogan -->
     <header>
         <h1>Everwell Wellness Studio</h1>
         <p>Feel Better. Be Better.</p>
     </header>
 
     <main>
+        <!-- welcome page, services and memerphis -->
         <h2>Welcome to Everwell</h2>
         <p>Your destination for relaxation and wellness.</p>
 
+        <!-- types of services {massages-> time, specials} {head/scalp treatements-> etc etc} -->
         <h2>Our Services</h2>
-        <p>Explore our massage and head and scalp treatments.</p>
+        <p>Explore our massage offerings as well as our head and scalp treatments.</p>
 
+        <!-- customers to view their membership details and rewards here. -->
         <h2>Memberships</h2>
         <p>Access your membership information and rewards.</p>
+
+        <!-- registration section for new accounts. -->
+        <section>
+            <h2>Create an Account</h2>
+            <p>Register for an Everwell Wellness Studio account.</p>
+
+            <!-- form to collect info for customer account. -->
+            <form id="registrationForm">
+
+                <!-- customer information needed for the accounts- name- email- address- dob. -->
+                <!-- TODO ADD PHONE NUMBER -->
+                  
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+
+                <br><br>
+
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required>
+
+                <br><br>
+
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" required>
+
+                <br><br>
+                
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required>
+
+                <br><br>
+
+                <!-- password and requirements- atleast 8 characters -->
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password"
+                       minlength="8" required>
+
+                <br><br>
+
+                <!-- submit info for registration. -->
+                <button type="submit">Create Account</button>
+
+            </form>
+
+            <!-- show a registration confirmation or error message. -->
+            <p id="registrationMessage"></p>
+        </section>
+
     </main>
 
+
+
+<script>
+    // get the registration form and message area.
+    const form = document.getElementById("registrationForm");
+    const message = document.getElementById("registrationMessage");
+
+    // check when the customer submits the form.
+    form.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        // get customer information from the form.
+        const formData = new FormData(form);
+
+        // send the customer information to the Java server.
+        try {
+            const response = await fetch("/register", {
+                method: "POST",
+                body: new URLSearchParams(formData)
+            });
+
+            const result = await response.text();
+
+            // displa registration message.
+            message.textContent = result;
+
+            if (response.ok) {
+                form.reset();
+            }
+
+        } catch (error) {
+            message.textContent = "Registration Error, Please try again";
+        }
+    });
+</script>
 </body>
 </html>

@@ -18,7 +18,7 @@ public class DatabaseTest {
                 System.out.println("Successfully connected to Everwell Wellness database!");
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
 
             // If something goes wrong, display the error.
             System.out.println("Database connection failed.");
